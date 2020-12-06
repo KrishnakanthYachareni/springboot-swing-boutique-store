@@ -37,3 +37,15 @@ spring.datasource.initialization-mode=always
        Username: user
        Password: user
     ```
+## Sample Screens:
+1. **Login Screen**
+<img src="https://github.com/KrishnakanthYachareni/springboot-swing-boutique-store/blob/master/site/Samples/Login_Screen.png" alt="">
+
+2. **Store Front Screen**
+<img src="https://github.com/KrishnakanthYachareni/springboot-swing-boutique-store/blob/master/site/Samples/Store_Front_Screen.png" alt="">
+
+3. **Store Backend(Admin) Screen**
+<img src="https://github.com/KrishnakanthYachareni/springboot-swing-boutique-store/blob/master/site/Samples/Store_BackEnd_Screen.png" alt="">
+
+4. **Add Item to Store Screen**
+<img src="https://github.com/KrishnakanthYachareni/springboot-swing-boutique-store/blob/master/site/Samples/AddItemToStore_Screen.png" alt="">
