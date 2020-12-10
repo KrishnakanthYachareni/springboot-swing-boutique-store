@@ -1,8 +1,9 @@
 package com.boutique.store.util;
 
 import com.boutique.store.entities.User;
-import com.boutique.store.forms.FrontStore;
+import com.boutique.store.presentation.FrontStoreJFrame;
 import com.boutique.store.repository.OrderRepository;
+import com.boutique.store.repository.ProductRepository;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,12 +15,14 @@ public class SalesFrontHandler extends DefaultCellEditor {
     protected JButton btn;
     private String lbl;
     private Boolean clicked;
+    private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final User user;
-    private final FrontStore thisObj;
+    private final FrontStoreJFrame thisObj;
 
-    public SalesFrontHandler(JTextField txt, OrderRepository orderRepository, User user, FrontStore thisObj) {
+    public SalesFrontHandler(JTextField txt, ProductRepository productRepository, OrderRepository orderRepository, User user, FrontStoreJFrame thisObj) {
         super(txt);
+        this.productRepository = productRepository;
         this.orderRepository = orderRepository;
         this.user = user;
         this.thisObj = thisObj;
@@ -40,14 +43,14 @@ public class SalesFrontHandler extends DefaultCellEditor {
         // Handles the order item addition to cart.
         long id = Long.parseLong(String.valueOf(table.getModel().getValueAt(row, 0)));
 
-        OrderUtil.updateItem(id, orderRepository);
+        OrderUtil.updateItem(id, productRepository);
         return btn;
     }
 
     @Override
     public Object getCellEditorValue() {
         if (clicked) {
-            new FrontStore(orderRepository, user).setVisible(true);
+            new FrontStoreJFrame(productRepository, orderRepository, user).setVisible(true);
             thisObj.dispose();
         }
         clicked = false;

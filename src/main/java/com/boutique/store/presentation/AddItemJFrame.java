@@ -1,8 +1,8 @@
-package com.boutique.store.forms;
+package com.boutique.store.presentation;
 
-import com.boutique.store.entities.OrderItem;
+import com.boutique.store.entities.Product;
 import com.boutique.store.entities.User;
-import com.boutique.store.repository.OrderRepository;
+import com.boutique.store.repository.ProductRepository;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
@@ -13,7 +13,7 @@ import java.awt.*;
 /**
  * Admin add item pop screen JFrame
  */
-public class AddItem extends JFrame {
+public class AddItemJFrame extends JFrame {
     private final JTextField textField;
     private final JTextField textField_1;
     private final JTextField textField_2;
@@ -23,7 +23,7 @@ public class AddItem extends JFrame {
     /**
      * Create the Add item pop screen
      */
-    public AddItem(OrderRepository orderRepository, AdminStore thisobj, User user) {
+    public AddItemJFrame(ProductRepository productRepository, AdminStoreJFrame thisobj, User user) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 404);
         JPanel contentPane = new JPanel();
@@ -64,7 +64,7 @@ public class AddItem extends JFrame {
             String description = textField_3.getText();
             String squantity = textField_4.getText();
 
-            OrderItem item = new OrderItem();
+            Product item = new Product();
             item.setTitle(title);
             item.setPrice(Double.parseDouble(price));
             item.setQuantity(Integer.parseInt(squantity));
@@ -74,16 +74,16 @@ public class AddItem extends JFrame {
             item.setStatus("N/A");
             item.setDescription(description);
 
-            orderRepository.save(item);
+            productRepository.save(item);
             thisobj.dispose();
-            new AdminStore(orderRepository, user).setVisible(true);
+            new AdminStoreJFrame(productRepository, user).setVisible(true);
             dispose();
         });
 
         JButton btnBack = new JButton("Cancel");
         btnBack.addActionListener(e -> {
             thisobj.dispose();
-            new AdminStore(orderRepository, user).setVisible(true);
+            new AdminStoreJFrame(productRepository, user).setVisible(true);
             dispose();
         });
         GroupLayout gl_contentPane = new GroupLayout(contentPane);

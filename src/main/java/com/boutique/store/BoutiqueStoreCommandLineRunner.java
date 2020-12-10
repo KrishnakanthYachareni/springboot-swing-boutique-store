@@ -1,6 +1,6 @@
 package com.boutique.store;
 
-import com.boutique.store.forms.UserLogin;
+import com.boutique.store.presentation.UserLoginJFrame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -12,10 +12,10 @@ import java.awt.*;
  */
 @Component
 public class BoutiqueStoreCommandLineRunner implements CommandLineRunner {
-    private final UserLogin userLogin;
+    private final UserLoginJFrame userLogin;
 
     @Autowired
-    public BoutiqueStoreCommandLineRunner(UserLogin main) {
+    public BoutiqueStoreCommandLineRunner(UserLoginJFrame main) {
         main.setVisible(true);
         this.userLogin = main;
     }

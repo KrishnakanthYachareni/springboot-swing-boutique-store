@@ -3,8 +3,8 @@ package com.boutique.store.entities;
 import javax.persistence.*;
 
 @Entity
-@Table
-public class OrderItem {
+@Table(name = "product")
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +36,10 @@ public class OrderItem {
 
     @Column
     private String status;
+
+
+    @Column
+    private Double tax;
 
     @Column
     private boolean isEditable;
@@ -122,5 +126,13 @@ public class OrderItem {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public Double getTax() {
+        return tax;
+    }
+
+    public void setTax(Double tax) {
+        this.tax = tax;
     }
 }

@@ -1,9 +1,9 @@
-package com.boutique.store.forms;
+package com.boutique.store.presentation;
 
-import com.boutique.store.enums.Role;
-import com.boutique.store.entities.OrderItem;
+import com.boutique.store.entities.Product;
 import com.boutique.store.entities.User;
-import com.boutique.store.repository.OrderRepository;
+import com.boutique.store.enums.Role;
+import com.boutique.store.repository.ProductRepository;
 import com.boutique.store.util.AdminHandler;
 import com.boutique.store.util.ButtonRenderer;
 import com.boutique.store.util.WordWrapCellRenderer;
@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class AdminStore extends JFrame {
+public class AdminStoreJFrame extends JFrame {
     private final JPanel mainPanel;
 
-    public AdminStore(OrderRepository orderRepository, User user) {
+    public AdminStoreJFrame(ProductRepository productRepository, User user) {
         setTitle("Store Backend – Admin");
         mainPanel = new JPanel(); // main panel
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -30,7 +30,7 @@ public class AdminStore extends JFrame {
         mainPanel.add(new JLabel(" \n"));
         JButton addItem = new JButton("Add New");
         addItem.addActionListener(e -> {
-            new AddItem(orderRepository, this, user).setVisible(true);
+            new AddItemJFrame(productRepository, this, user).setVisible(true);
         });
         mainPanel.add(addItem);
         mainPanel.add(new JLabel(" \n"));
@@ -38,7 +38,7 @@ public class AdminStore extends JFrame {
         // Admin Navigation to front store.
         JButton button = new JButton("Store");
         button.addActionListener(e -> {
-            new FrontStore(orderRepository, user).setVisible(true);
+            new FrontStoreJFrame(productRepository, null, user).setVisible(true);
             dispose();
         });
 
@@ -50,7 +50,7 @@ public class AdminStore extends JFrame {
         mainPanel.setBackground(Color.white);
         mainPanel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 
-        JScrollPane pane = getOrderTable(orderRepository, user);
+        JScrollPane pane = getOrderTable(productRepository, user);
         mainPanel.add(pane);
         add(mainPanel);
 
@@ -59,11 +59,11 @@ public class AdminStore extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    private JScrollPane getOrderTable(OrderRepository orderRepository, User user) {
-        List<OrderItem> orderItems = (List<OrderItem>) orderRepository.findAll();
+    private JScrollPane getOrderTable(ProductRepository productRepository, User user) {
+        List<Product> products = (List<Product>) productRepository.findAll();
 
         List<List<String>> decoratedTableRows = new ArrayList<>();
-        for (OrderItem item : orderItems) {
+        for (Product item : products) {
             List<String> list = new ArrayList<>();
             list.add(String.valueOf(item.getId()));
             list.add("Title: " + item.getTitle() + "\n Colour:" + item.getColor());
@@ -87,7 +87,7 @@ public class AdminStore extends JFrame {
         table.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
 
         //SET CUSTOM EDITOR TO TEAMS COLUMN
-        table.getColumnModel().getColumn(5).setCellEditor(new AdminHandler(new JTextField(), orderRepository, user, this));
+        table.getColumnModel().getColumn(5).setCellEditor(new AdminHandler(new JTextField(), productRepository, user, this));
 
 
         table.getColumnModel().getColumn(1).setCellRenderer(new WordWrapCellRenderer());

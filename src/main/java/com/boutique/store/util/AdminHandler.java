@@ -1,8 +1,8 @@
 package com.boutique.store.util;
 
 import com.boutique.store.entities.User;
-import com.boutique.store.forms.AdminStore;
-import com.boutique.store.repository.OrderRepository;
+import com.boutique.store.presentation.AdminStoreJFrame;
+import com.boutique.store.repository.ProductRepository;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,13 +16,13 @@ public class AdminHandler extends DefaultCellEditor {
     protected JButton btn;
     private String lbl;
     private Boolean clicked;
-    private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
     private final User user;
-    private final AdminStore thisObj;
+    private final AdminStoreJFrame thisObj;
 
-    public AdminHandler(JTextField txt, OrderRepository orderRepository, User user, AdminStore thisObj) {
+    public AdminHandler(JTextField txt, ProductRepository productRepository, User user, AdminStoreJFrame thisObj) {
         super(txt);
-        this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
         this.user = user;
         this.thisObj = thisObj;
 
@@ -46,14 +46,14 @@ public class AdminHandler extends DefaultCellEditor {
 
         long id = Long.parseLong(String.valueOf(table.getModel().getValueAt(0, 0)));
 
-        OrderUtil.deleteItem(id, orderRepository);
+        OrderUtil.deleteItem(id, productRepository);
         return btn;
     }
 
     @Override
     public Object getCellEditorValue() {
         if (clicked) {
-            new AdminStore(orderRepository, user).setVisible(true);
+            new AdminStoreJFrame(productRepository, user).setVisible(true);
             thisObj.dispose();
         }
         clicked = false;

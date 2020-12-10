@@ -1,7 +1,8 @@
-package com.boutique.store.forms;
+package com.boutique.store.presentation;
 
 import com.boutique.store.entities.User;
 import com.boutique.store.repository.OrderRepository;
+import com.boutique.store.repository.ProductRepository;
 import com.boutique.store.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +19,7 @@ import java.awt.event.ActionListener;
  * 2.User with role having "USER" would get navigated to Store Front screen.
  */
 @Controller
-public class UserLogin extends JFrame {
+public class UserLoginJFrame extends JFrame {
     private static final long serialVersionUID = 1L;
     private final JTextField textField;
     private final JPasswordField passwordField;
@@ -30,12 +31,15 @@ public class UserLogin extends JFrame {
     private UserRepository repository;
 
     @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
     private OrderRepository orderRepository;
 
     /**
      * Constructor used to initialize the JFrame login screen elements and it performs the on click action operations which are present on the screen.
      */
-    public UserLogin() {
+    public UserLoginJFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(450, 190, 1014, 597);
         setResizable(false);
@@ -96,7 +100,7 @@ public class UserLogin extends JFrame {
                     JOptionPane.showMessageDialog(null, "Given user is not Exist");
                 }
                 if (password.equals(user.getPassword())) {
-                    new FrontStore(orderRepository, user).setVisible(true);
+                    new FrontStoreJFrame(productRepository, orderRepository, user).setVisible(true);
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid User or Password");
