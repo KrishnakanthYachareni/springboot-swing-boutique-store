@@ -4,7 +4,7 @@ import com.boutique.store.enums.Role;
 import com.boutique.store.entities.OrderItem;
 import com.boutique.store.entities.User;
 import com.boutique.store.repository.OrderRepository;
-import com.boutique.store.util.AdminButtonEditor;
+import com.boutique.store.util.AdminHandler;
 import com.boutique.store.util.ButtonRenderer;
 import com.boutique.store.util.WordWrapCellRenderer;
 
@@ -87,7 +87,7 @@ public class AdminStore extends JFrame {
         table.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
 
         //SET CUSTOM EDITOR TO TEAMS COLUMN
-        table.getColumnModel().getColumn(5).setCellEditor(new AdminButtonEditor(new JTextField(), orderRepository, user, this));
+        table.getColumnModel().getColumn(5).setCellEditor(new AdminHandler(new JTextField(), orderRepository, user, this));
 
 
         table.getColumnModel().getColumn(1).setCellRenderer(new WordWrapCellRenderer());

@@ -10,53 +10,33 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+/**
+ * Admin add item pop screen JFrame
+ */
 public class AddItem extends JFrame {
-    static AddItem frame;
-    private JPanel contentPane;
-    private JTextField textField;
-    private JTextField textField_1;
-    private JTextField textField_2;
-    private JTextField textField_3;
-    private JTextField textField_4;
-
-    /*  *//**
-     * Launch the application.
-     *//*
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    frame = new AddItem();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }*/
+    private final JTextField textField;
+    private final JTextField textField_1;
+    private final JTextField textField_2;
+    private final JTextField textField_3;
+    private final JTextField textField_4;
 
     /**
-     * Create the frame.
+     * Create the Add item pop screen
      */
     public AddItem(OrderRepository orderRepository, AdminStore thisobj, User user) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 404);
-        contentPane = new JPanel();
+        JPanel contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
 
         JLabel lblAddBooks = new JLabel("Add Item");
         lblAddBooks.setForeground(Color.GRAY);
         lblAddBooks.setFont(new Font("Tahoma", Font.PLAIN, 18));
-
         JLabel lblTitle = new JLabel("Title:");
-
         JLabel lblbarCodeNumber = new JLabel("BarCode:");
-
         JLabel lblPrice = new JLabel("Price:");
-
         JLabel lblDescription = new JLabel("Description:");
-
         JLabel lblQuantity = new JLabel("Quantity:");
 
         textField = new JTextField();
@@ -75,6 +55,8 @@ public class AddItem extends JFrame {
         textField_4.setColumns(10);
 
         JButton btnAddBooks = new JButton("Add Item");
+
+        // After cliking on Add Item button, it saves the new order data inside database using spring data repository.
         btnAddBooks.addActionListener(e -> {
             String title = textField.getText();
             String barCode = textField_1.getText();
@@ -98,7 +80,7 @@ public class AddItem extends JFrame {
             dispose();
         });
 
-        JButton btnBack = new JButton("Back");
+        JButton btnBack = new JButton("Cancel");
         btnBack.addActionListener(e -> {
             thisobj.dispose();
             new AdminStore(orderRepository, user).setVisible(true);

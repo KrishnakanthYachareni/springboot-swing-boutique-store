@@ -4,6 +4,9 @@ import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
+/**
+ * This class is used to wrap the text data in table cells.
+ */
 public class WordWrapCellRenderer extends JTextArea implements TableCellRenderer {
     public WordWrapCellRenderer() {
         setLineWrap(true);

@@ -1,23 +1,24 @@
 package com.boutique.store.util;
 
 import com.boutique.store.entities.User;
-import com.boutique.store.forms.AdminStore;
+import com.boutique.store.forms.FrontStore;
 import com.boutique.store.repository.OrderRepository;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class AdminButtonEditor extends DefaultCellEditor {
+/**
+ * It handles the store front screen sales order items logic to performs CRUD.
+ */
+public class SalesFrontHandler extends DefaultCellEditor {
     protected JButton btn;
     private String lbl;
     private Boolean clicked;
-    private OrderRepository orderRepository;
-    private User user;
-    private AdminStore thisObj;
+    private final OrderRepository orderRepository;
+    private final User user;
+    private final FrontStore thisObj;
 
-    public AdminButtonEditor(JTextField txt, OrderRepository orderRepository, User user, AdminStore thisObj) {
+    public SalesFrontHandler(JTextField txt, OrderRepository orderRepository, User user, FrontStore thisObj) {
         super(txt);
         this.orderRepository = orderRepository;
         this.user = user;
@@ -27,12 +28,7 @@ public class AdminButtonEditor extends DefaultCellEditor {
         btn.setOpaque(true);
 
         //WHEN BUTTON IS CLICKED
-        btn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                fireEditingStopped();
-            }
-        });
+        btn.addActionListener(e -> fireEditingStopped());
     }
 
     @Override
@@ -41,16 +37,17 @@ public class AdminButtonEditor extends DefaultCellEditor {
         btn.setText(lbl);
         clicked = true;
 
-        long id = Long.parseLong(String.valueOf(table.getModel().getValueAt(0, 0)));
+        // Handles the order item addition to cart.
+        long id = Long.parseLong(String.valueOf(table.getModel().getValueAt(row, 0)));
 
-        OrderUtil.deleteItem(id, orderRepository);
+        OrderUtil.updateItem(id, orderRepository);
         return btn;
     }
 
     @Override
     public Object getCellEditorValue() {
         if (clicked) {
-            new AdminStore(orderRepository, user).setVisible(true);
+            new FrontStore(orderRepository, user).setVisible(true);
             thisObj.dispose();
         }
         clicked = false;

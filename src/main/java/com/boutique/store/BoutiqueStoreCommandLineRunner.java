@@ -23,7 +23,7 @@ public class BoutiqueStoreCommandLineRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        //This boots up the GUI.
+        //This boots up the GUI initial Login screen.
         EventQueue.invokeLater(() -> userLogin.setVisible(true));
     }
 }

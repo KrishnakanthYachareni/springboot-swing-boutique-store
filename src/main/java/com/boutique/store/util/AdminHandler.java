@@ -1,7 +1,7 @@
 package com.boutique.store.util;
 
 import com.boutique.store.entities.User;
-import com.boutique.store.forms.FrontStore;
+import com.boutique.store.forms.AdminStore;
 import com.boutique.store.repository.OrderRepository;
 
 import javax.swing.*;
@@ -9,15 +9,18 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class FrontButtonEditor extends DefaultCellEditor {
+/**
+ * It handles the store back end screen sales order items logic to performs CRUD.
+ */
+public class AdminHandler extends DefaultCellEditor {
     protected JButton btn;
     private String lbl;
     private Boolean clicked;
-    private OrderRepository orderRepository;
-    private User user;
-    private FrontStore thisObj;
+    private final OrderRepository orderRepository;
+    private final User user;
+    private final AdminStore thisObj;
 
-    public FrontButtonEditor(JTextField txt, OrderRepository orderRepository, User user, FrontStore thisObj) {
+    public AdminHandler(JTextField txt, OrderRepository orderRepository, User user, AdminStore thisObj) {
         super(txt);
         this.orderRepository = orderRepository;
         this.user = user;
@@ -41,16 +44,16 @@ public class FrontButtonEditor extends DefaultCellEditor {
         btn.setText(lbl);
         clicked = true;
 
-        long id = Long.parseLong(String.valueOf(table.getModel().getValueAt(row, 0)));
+        long id = Long.parseLong(String.valueOf(table.getModel().getValueAt(0, 0)));
 
-        OrderUtil.addItem(id, orderRepository);
+        OrderUtil.deleteItem(id, orderRepository);
         return btn;
     }
 
     @Override
     public Object getCellEditorValue() {
         if (clicked) {
-            new FrontStore(orderRepository, user).setVisible(true);
+            new AdminStore(orderRepository, user).setVisible(true);
             thisObj.dispose();
         }
         clicked = false;

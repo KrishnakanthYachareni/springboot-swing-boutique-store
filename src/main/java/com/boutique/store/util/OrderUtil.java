@@ -7,7 +7,10 @@ import java.util.Optional;
 
 public class OrderUtil {
 
-    public static void addItem(long id, OrderRepository orderRepository) {
+    /**
+     * It updates the order item in database.
+     */
+    public static void updateItem(long id, OrderRepository orderRepository) {
         Optional<OrderItem> item = orderRepository.findById(id);
         if (item.isPresent()) {
             double unitPrice = item.get().getPrice() / item.get().getQuantity();
@@ -17,6 +20,9 @@ public class OrderUtil {
         }
     }
 
+    /**
+     * It deletes the item in database.
+     */
     public static void deleteItem(long id, OrderRepository orderRepository) {
         Optional<OrderItem> item = orderRepository.findById(id);
         item.ifPresent(orderRepository::delete);

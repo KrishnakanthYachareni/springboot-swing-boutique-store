@@ -12,14 +12,19 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * This is Application User, Admin login page. User would be able to navigate to respective store screens based on the user authentication ROLE.
+ * 1. User with role having "ADMIN" would get navigated to Store back end screen.
+ * 2.User with role having "USER" would get navigated to Store Front screen.
+ */
 @Controller
 public class UserLogin extends JFrame {
     private static final long serialVersionUID = 1L;
-    private JTextField textField;
-    private JPasswordField passwordField;
-    private JButton btnNewButton;
-    private JLabel label;
-    private JPanel contentPane;
+    private final JTextField textField;
+    private final JPasswordField passwordField;
+    private final JButton btnNewButton;
+    private final JLabel label;
+    private final JPanel contentPane;
 
     @Autowired
     private UserRepository repository;
@@ -27,6 +32,9 @@ public class UserLogin extends JFrame {
     @Autowired
     private OrderRepository orderRepository;
 
+    /**
+     * Constructor used to initialize the JFrame login screen elements and it performs the on click action operations which are present on the screen.
+     */
     public UserLogin() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(450, 190, 1014, 597);
@@ -72,10 +80,18 @@ public class UserLogin extends JFrame {
         btnNewButton.setBounds(545, 392, 162, 73);
         btnNewButton.addActionListener(new ActionListener() {
 
+
+            /**
+             * When User click on Login button from login screen.
+             */
             public void actionPerformed(ActionEvent e) {
                 String userName = textField.getText();
                 String password = passwordField.getText();
+
+                // Fetch the user from database.
                 User user = repository.findByUsername(userName);
+
+                //Validate the username and Password
                 if (null == user) {
                     JOptionPane.showMessageDialog(null, "Given user is not Exist");
                 }
