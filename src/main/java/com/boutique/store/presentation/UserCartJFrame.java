@@ -1,69 +1,158 @@
 package com.boutique.store.presentation;
 
 import com.boutique.store.entities.Order;
+import com.boutique.store.entities.OrderHistory;
 import com.boutique.store.entities.Product;
 import com.boutique.store.entities.User;
+import com.boutique.store.repository.OrderHistoryRepository;
 import com.boutique.store.repository.OrderRepository;
+import com.boutique.store.util.ButtonRenderer;
+import com.boutique.store.util.OrderHistoryHandler;
 import com.boutique.store.util.OrderUtil;
 import com.boutique.store.util.WordWrapCellRenderer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.swing.*;
+import javax.transaction.Transactional;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
- * This Jframe is final user cart screen, where sale user can add his/he items into cart and make their items for final purchase.
+ * This JFrame is final user cart screen, where sale user can add his/he items into cart and make their items for final purchase.
  */
-public class UserCartJFrame extends JFrame {
+@Component
+public class UserCartJFrame {
 
-    public UserCartJFrame(OrderRepository orderRepository, User user) {
-        setTitle("User Cart Item(s)");
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderHistoryRepository orderHistoryRepository;
+
+    @Autowired
+    private FrontStoreJFrame frontStoreJFrame;
+
+    @Autowired
+    private OrderUtil orderUtil;
+
+    private JFrame jFrame;
+
+    @Transactional
+    public JFrame userCartJFrame(User user) {
+        jFrame = new JFrame("User Cart Item(s)");
         JPanel mainPanel = new JPanel(); // main panel
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.add(new JLabel("Order history:"));
+        mainPanel.add(new JLabel(" \n"));
+        mainPanel.add(new JLabel(" \n"));
+
+        //Current user order history data.
+        JTable table = getOrderHistoryTable(user);
+        mainPanel.add(table);
+        mainPanel.add(new JLabel(" \n"));
+        mainPanel.add(new JLabel(" \n"));
         mainPanel.add(new JLabel(" \n"));
 
         mainPanel.add(new JLabel("Current Order(s): "));
         mainPanel.add(new JLabel(" \n"));
-
         mainPanel.setBackground(Color.white);
         mainPanel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 
-        JScrollPane pane = getCurrentOrders(orderRepository, user);
+        JScrollPane pane = getCurrentOrders(user);
         mainPanel.add(pane);
-        add(mainPanel);
+        jFrame.add(mainPanel);
 
-        setBounds(450, 190, 1014, 597);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        // Purchase the order it adds the purchased items to order history.
+        JButton purchaseButton = new JButton("Complete Purchase");
+        purchaseButton.addActionListener(e -> {
+            List<Order> orders = orderRepository.findAllByUserId(user.getId());
+            for (Order order : orders) {
+                OrderHistory orderHistory = new OrderHistory();
+                orderHistory.setProduct(order.getProduct());
+                orderHistory.setUserId(user.getId());
+                orderHistory.setStatus("Delivered");
+                orderHistoryRepository.save(orderHistory);
+                orderUtil.removeOrder(user, false);
+            }
+            JOptionPane.showMessageDialog(jFrame, "Purchased");
+            this.userCartJFrame().dispose();
+            this.userCartJFrame(user).setVisible(true);
+        });
+        mainPanel.add(purchaseButton);
+
+        // Remove the order completely.
+        JButton removeButton = new JButton("Remove");
+        removeButton.addActionListener(e -> {
+            orderUtil.removeOrder(user, true);
+            this.userCartJFrame().dispose();
+            this.userCartJFrame(user).setVisible(true);
+        });
+        mainPanel.add(removeButton);
+
+        //Navigation to front store
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(e -> {
+            this.userCartJFrame().dispose();
+            this.frontStoreJFrame.frontStoreJFrame(user).setVisible(true);
+        });
+        mainPanel.add(cancelButton);
+        addSomeSpace(mainPanel);
+
+        jFrame.setBounds(450, 190, 1014, 597);
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jFrame.setLocationRelativeTo(null);
+        return jFrame;
     }
 
-    private JScrollPane getCurrentOrders(OrderRepository orderRepository, User user) {
+    private JTable getOrderHistoryTable(User user) {
+        List<OrderHistory> historyOrders = orderHistoryRepository.findAllByUserId(user.getId());
+        List<List<String>> history = new ArrayList<>();
+        for (OrderHistory order : historyOrders) {
+            List<String> list = new ArrayList<>();
+            list.add(String.valueOf(order.getId()));
+            //TODO: Update audit time
+            list.add(new Date().toString());
+            list.add("[view]");
+            history.add(list);
+        }
+        Object[][] data = history.stream()
+                .map(l -> l.toArray(new String[0]))
+                .toArray(Object[][]::new);
+
+        //COLUMN HEADERS
+        String[] columnHeaders = new String[]{"OrderId", "Date", ""};
+        //CREATE OUR TABLE AND SET HEADER
+        JTable table = new JTable(data, columnHeaders);
+        //SET CUSTOM RENDERER TO TEAMS COLUMN
+        table.getColumnModel().getColumn(2).setCellRenderer(new ButtonRenderer());
+
+        //SET CUSTOM EDITOR TO TEAMS COLUMN
+        table.getColumnModel().getColumn(2).setCellEditor(new OrderHistoryHandler(new JTextField(), orderHistoryRepository, user, this));
+
+        table.setShowGrid(false);
+        return table;
+    }
+
+    private JScrollPane getCurrentOrders(User user) {
         List<Order> orders = orderRepository.findAllByUserId(user.getId());
 
         List<List<String>> orderItems = new ArrayList<>();
-        /*for (Product item : OrderUtil.extractProduct(orders)) {
+        for (Product item : OrderUtil.extractProduct(orders)) {
             List<String> list = new ArrayList<>();
             list.add(String.valueOf(item.getId()));
-            list.add("Item: " + item.getTitle() + " \n Barcode number: " + item.getBarcodeNumber());
-            list.add("Price: " + item.getPrice() + " \n Tax: " + item.getTax() + "Total: " + OrderUtil.totalAmount(item));
+            list.add("Item: " + item.getTitle() + " \nBarcode number: " + item.getBarcodeNumber());
+            list.add("Price: $" + item.getPrice() + " \nTax: $" + item.getTax() + "\nTotal: $" + OrderUtil.totalAmount(item));
             orderItems.add(list);
-        }*/
-
-        List<String> list = new ArrayList<>();
-        list.add(String.valueOf(1));
-        list.add("Item: " + "Cross body bag x 1" + " \n Barcode number: " + "123466812");
-        list.add("Price: " + "150" + " \n Tax: " + "19.40" + "Total: " + "160");
-
-        orderItems.add(list);
+        }
 
         List<String> grandTotalRow = new ArrayList<>();
         grandTotalRow.add("");
         grandTotalRow.add("");
-//        grandTotalRow.add(OrderUtil.grandTotalAmount(orders));
-        grandTotalRow.add("200");
+        grandTotalRow.add("Grand Total: $" + OrderUtil.grandTotalAmount(orders));
         orderItems.add(grandTotalRow);
 
         Object[][] data = orderItems.stream()
@@ -73,7 +162,6 @@ public class UserCartJFrame extends JFrame {
         //COLUMN HEADERS
         String[] columnHeaders = new String[]{"Id", "Item Details", "Amount"};
 
-
         //CREATE OUR TABLE AND SET HEADER
         JTable table = new JTable(data, columnHeaders);
 
@@ -82,7 +170,22 @@ public class UserCartJFrame extends JFrame {
 
         return new JScrollPane(table);
     }
+
+    public JFrame userCartJFrame() {
+        return this.jFrame;
+    }
+
+    private void addSomeSpace(JPanel mainPanel) {
+        addNewLine(mainPanel);
+    }
+
+    private void addNewLine(JPanel mainPanel) {
+        mainPanel.add(new JLabel(" \n"));
+        mainPanel.add(new JLabel(" \n"));
+        mainPanel.add(new JLabel(" \n"));
+        mainPanel.add(new JLabel(" \n"));
+        mainPanel.add(new JLabel(" \n"));
+        mainPanel.add(new JLabel(" \n"));
+    }
 }
-
-
 

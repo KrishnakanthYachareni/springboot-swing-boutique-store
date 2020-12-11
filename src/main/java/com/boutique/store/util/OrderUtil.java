@@ -2,23 +2,67 @@ package com.boutique.store.util;
 
 import com.boutique.store.entities.Order;
 import com.boutique.store.entities.Product;
+import com.boutique.store.entities.User;
+import com.boutique.store.repository.OrderRepository;
 import com.boutique.store.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class OrderUtil {
 
+    @Autowired
+    private OrderRepository orderRepository;
+
+
+    @Autowired
+    private ProductRepository productRepository;
+
     /**
-     * It updates the order item in database.
+     * It remove the current use order items from the cart and update the Product Items quantity back to to original.
+     **/
+    public void removeOrder(User user, boolean isCancel) {
+        List<Order> orders = orderRepository.findAllByUserId(user.getId());
+        for (Order order : orders) {
+
+            Optional<Product> product = productRepository.findById(order.getProduct().getId());
+            if (product.isPresent() && isCancel) {
+                int quantity = product.get().getQuantity();
+                product.get().setQuantity(quantity + 1);
+                productRepository.save(product.get());
+            }
+
+            orderRepository.delete(order);
+        }
+
+
+    }
+
+    /**
+     * It updates the Product quantity and add the Product item into current use cart in database.
      */
-    public static void updateItem(long id, ProductRepository productRepository) {
+    public static void addItemToCart(long id, User user, ProductRepository productRepository, OrderRepository orderRepository) {
         Optional<Product> item = productRepository.findById(id);
         if (item.isPresent()) {
-            double unitPrice = item.get().getPrice() / item.get().getQuantity();
-            item.get().setQuantity(item.get().getQuantity() + 1);
-            item.get().setPrice(item.get().getPrice() + unitPrice);
+
+            Order order = new Order();
+            order.setUserId(user.getId());
+            order.setProduct(item.get());
+            order.setStatus("Added To Cart");
+
+            orderRepository.save(order);
+
+            int itemQuantity = item.get().getQuantity();
+            if (itemQuantity <= 0) {
+                itemQuantity = 0;
+            } else {
+                itemQuantity--;
+            }
+            item.get().setQuantity(itemQuantity);
             productRepository.save(item.get());
         }
     }

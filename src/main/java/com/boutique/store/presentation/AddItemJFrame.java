@@ -88,6 +88,7 @@ public class AddItemJFrame {
             item.setColor("blue");
             item.setStatus("N/A");
             item.setDescription(description);
+            item.setTax(0.13 * Double.parseDouble(price));
 
             productRepository.save(item);
             thisobj.adminJFrame().dispose();

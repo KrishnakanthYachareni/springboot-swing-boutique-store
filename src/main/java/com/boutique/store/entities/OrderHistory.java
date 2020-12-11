@@ -6,8 +6,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "orders")
-public class Order {
+@Table(name = "history")
+public class OrderHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +16,7 @@ public class Order {
     @Column
     private Long userId;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Product product;

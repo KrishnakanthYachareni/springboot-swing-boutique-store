@@ -29,11 +29,16 @@ public class FrontStoreJFrame {
     @Autowired
     private AdminStoreJFrame adminStoreJFrame;
 
+    @Autowired
+    private UserCartJFrame userCartJFrame;
+
+    private JFrame jFrame;
+
     /**
      * JFrame Front screen elements and it performs the on click actions from the screen.
      */
     public JFrame frontStoreJFrame(User user) {
-        JFrame jFrame = new JFrame("Store Front – Sales Personnel Login");
+        jFrame = new JFrame("Store Front – Sales Personnel Login");
 
         JPanel mainPanel = new JPanel(); // main panel
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -62,8 +67,8 @@ public class FrontStoreJFrame {
         //Add Order screen button.
         JButton orderButton = new JButton("Go To Cart");
         orderButton.addActionListener(e -> {
-            new UserCartJFrame(orderRepository, user).setVisible(true);
-            jFrame.dispose();
+            this.frontStoreJFrame().dispose();
+            userCartJFrame.userCartJFrame(user).setVisible(true);
         });
         mainPanel.add(orderButton);
 
@@ -109,7 +114,7 @@ public class FrontStoreJFrame {
         table.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
 
         //SET CUSTOM EDITOR TO TEAMS COLUMN
-        table.getColumnModel().getColumn(5).setCellEditor(new SalesFrontHandler(new JTextField(), productRepository, user, thisJFrame));
+        table.getColumnModel().getColumn(5).setCellEditor(new SalesFrontHandler(new JTextField(), productRepository, orderRepository, user, this));
 
         // To Wrap the text in table cells.
         table.getColumnModel().getColumn(1).setCellRenderer(new WordWrapCellRenderer());
@@ -117,6 +122,10 @@ public class FrontStoreJFrame {
         table.getColumnModel().getColumn(3).setCellRenderer(new WordWrapCellRenderer());
 
         return new JScrollPane(table);
+    }
+
+    public JFrame frontStoreJFrame() {
+        return this.jFrame;
     }
 }
 
