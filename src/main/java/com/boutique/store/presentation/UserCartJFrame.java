@@ -7,8 +7,8 @@ import com.boutique.store.entities.User;
 import com.boutique.store.repository.OrderHistoryRepository;
 import com.boutique.store.repository.OrderRepository;
 import com.boutique.store.util.ButtonRenderer;
-import com.boutique.store.util.OrderHistoryHandler;
-import com.boutique.store.util.OrderUtil;
+import com.boutique.store.service.OrderHistoryService;
+import com.boutique.store.service.OrderUtil;
 import com.boutique.store.util.WordWrapCellRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,6 @@ import javax.swing.*;
 import javax.transaction.Transactional;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -114,8 +113,7 @@ public class UserCartJFrame {
         for (OrderHistory order : historyOrders) {
             List<String> list = new ArrayList<>();
             list.add(String.valueOf(order.getId()));
-            //TODO: Update audit time
-            list.add(new Date().toString());
+            list.add(order.getCreatedAt().toString());
             list.add("[view]");
             history.add(list);
         }
@@ -131,7 +129,7 @@ public class UserCartJFrame {
         table.getColumnModel().getColumn(2).setCellRenderer(new ButtonRenderer());
 
         //SET CUSTOM EDITOR TO TEAMS COLUMN
-        table.getColumnModel().getColumn(2).setCellEditor(new OrderHistoryHandler(new JTextField(), orderHistoryRepository, user, this));
+        table.getColumnModel().getColumn(2).setCellEditor(new OrderHistoryService(new JTextField(), orderHistoryRepository, user, this));
 
         table.setShowGrid(false);
         return table;
@@ -175,6 +173,10 @@ public class UserCartJFrame {
         return this.jFrame;
     }
 
+    public Container rootPanel() {
+        return jFrame.getContentPane();
+    }
+
     private void addSomeSpace(JPanel mainPanel) {
         addNewLine(mainPanel);
     }
@@ -187,5 +189,6 @@ public class UserCartJFrame {
         mainPanel.add(new JLabel(" \n"));
         mainPanel.add(new JLabel(" \n"));
     }
+
 }
 

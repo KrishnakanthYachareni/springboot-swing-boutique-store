@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "history")
-public class OrderHistory {
+public class OrderHistory extends AuditModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +16,7 @@ public class OrderHistory {
     @Column
     private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "product_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Product product;

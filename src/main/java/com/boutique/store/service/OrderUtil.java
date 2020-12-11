@@ -1,4 +1,4 @@
-package com.boutique.store.util;
+package com.boutique.store.service;
 
 import com.boutique.store.entities.Order;
 import com.boutique.store.entities.Product;

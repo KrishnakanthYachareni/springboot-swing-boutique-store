@@ -5,7 +5,7 @@ import com.boutique.store.entities.User;
 import com.boutique.store.repository.OrderRepository;
 import com.boutique.store.repository.ProductRepository;
 import com.boutique.store.util.ButtonRenderer;
-import com.boutique.store.util.SalesFrontHandler;
+import com.boutique.store.service.SalesFrontService;
 import com.boutique.store.util.UserUtil;
 import com.boutique.store.util.WordWrapCellRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,7 +114,7 @@ public class FrontStoreJFrame {
         table.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
 
         //SET CUSTOM EDITOR TO TEAMS COLUMN
-        table.getColumnModel().getColumn(5).setCellEditor(new SalesFrontHandler(new JTextField(), productRepository, orderRepository, user, this));
+        table.getColumnModel().getColumn(5).setCellEditor(new SalesFrontService(new JTextField(), productRepository, orderRepository, user, this));
 
         // To Wrap the text in table cells.
         table.getColumnModel().getColumn(1).setCellRenderer(new WordWrapCellRenderer());

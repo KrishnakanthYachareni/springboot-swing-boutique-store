@@ -4,7 +4,7 @@ import com.boutique.store.entities.Product;
 import com.boutique.store.entities.User;
 import com.boutique.store.enums.Role;
 import com.boutique.store.repository.ProductRepository;
-import com.boutique.store.util.AdminHandler;
+import com.boutique.store.service.AdminService;
 import com.boutique.store.util.ButtonRenderer;
 import com.boutique.store.util.WordWrapCellRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +102,7 @@ public class AdminStoreJFrame {
         table.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
 
         //SET CUSTOM EDITOR TO TEAMS COLUMN
-        table.getColumnModel().getColumn(5).setCellEditor(new AdminHandler(new JTextField(), productRepository, user, this));
+        table.getColumnModel().getColumn(5).setCellEditor(new AdminService(new JTextField(), productRepository, user, this));
 
 
         table.getColumnModel().getColumn(1).setCellRenderer(new WordWrapCellRenderer());

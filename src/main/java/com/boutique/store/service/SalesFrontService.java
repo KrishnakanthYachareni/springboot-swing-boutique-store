@@ -1,4 +1,4 @@
-package com.boutique.store.util;
+package com.boutique.store.service;
 
 import com.boutique.store.entities.User;
 import com.boutique.store.presentation.FrontStoreJFrame;
@@ -11,7 +11,7 @@ import java.awt.*;
 /**
  * It handles the store front screen sales order items logic to performs CRUD.
  */
-public class SalesFrontHandler extends DefaultCellEditor {
+public class SalesFrontService extends DefaultCellEditor {
     protected JButton btn;
     private String lbl;
     private Boolean clicked;
@@ -20,7 +20,7 @@ public class SalesFrontHandler extends DefaultCellEditor {
     private final User user;
     private final FrontStoreJFrame frontStoreJFrame;
 
-    public SalesFrontHandler(JTextField txt, ProductRepository productRepository, OrderRepository orderRepository, User user, FrontStoreJFrame frontStoreJFrame) {
+    public SalesFrontService(JTextField txt, ProductRepository productRepository, OrderRepository orderRepository, User user, FrontStoreJFrame frontStoreJFrame) {
         super(txt);
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
