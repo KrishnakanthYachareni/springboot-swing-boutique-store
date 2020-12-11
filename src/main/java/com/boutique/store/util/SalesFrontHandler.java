@@ -2,7 +2,6 @@ package com.boutique.store.util;
 
 import com.boutique.store.entities.User;
 import com.boutique.store.presentation.FrontStoreJFrame;
-import com.boutique.store.repository.OrderRepository;
 import com.boutique.store.repository.ProductRepository;
 
 import javax.swing.*;
@@ -16,14 +15,12 @@ public class SalesFrontHandler extends DefaultCellEditor {
     private String lbl;
     private Boolean clicked;
     private final ProductRepository productRepository;
-    private final OrderRepository orderRepository;
     private final User user;
-    private final FrontStoreJFrame thisObj;
+    private final JFrame thisObj;
 
-    public SalesFrontHandler(JTextField txt, ProductRepository productRepository, OrderRepository orderRepository, User user, FrontStoreJFrame thisObj) {
+    public SalesFrontHandler(JTextField txt, ProductRepository productRepository, User user, JFrame thisObj) {
         super(txt);
         this.productRepository = productRepository;
-        this.orderRepository = orderRepository;
         this.user = user;
         this.thisObj = thisObj;
 
@@ -50,7 +47,7 @@ public class SalesFrontHandler extends DefaultCellEditor {
     @Override
     public Object getCellEditorValue() {
         if (clicked) {
-            new FrontStoreJFrame(productRepository, orderRepository, user).setVisible(true);
+            new FrontStoreJFrame().frontStoreJFrame(user).setVisible(true);
             thisObj.dispose();
         }
         clicked = false;

@@ -8,6 +8,8 @@ import com.boutique.store.util.ButtonRenderer;
 import com.boutique.store.util.SalesFrontHandler;
 import com.boutique.store.util.UserUtil;
 import com.boutique.store.util.WordWrapCellRenderer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,13 +17,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class FrontStoreJFrame extends JFrame {
+@Component
+public class FrontStoreJFrame {
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private AdminStoreJFrame adminStoreJFrame;
 
     /**
-     * Construction of JFrame Front screen elements and it performs the on click actions from the screen.
+     * JFrame Front screen elements and it performs the on click actions from the screen.
      */
-    public FrontStoreJFrame(ProductRepository productRepository, OrderRepository orderRepository, User user) {
-        setTitle("Store Front – Sales Personnel Login");
+    public JFrame frontStoreJFrame(User user) {
+        JFrame jFrame = new JFrame("Store Front – Sales Personnel Login");
+
         JPanel mainPanel = new JPanel(); // main panel
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.add(new JLabel("Store Front – Sales Personnel Login (" + user.getUsername() + ")\n"));
@@ -35,8 +48,8 @@ public class FrontStoreJFrame extends JFrame {
         // Admin Navigation from front store.
         JButton adminButton = new JButton("Admin");
         adminButton.addActionListener(e -> {
-            new AdminStoreJFrame(productRepository, user).setVisible(true);
-            dispose();
+            adminStoreJFrame.adminStoreJFrame(user).setVisible(true);
+            jFrame.dispose();
         });
 
         //Add Admin screen button, if user role is Admin
@@ -50,24 +63,25 @@ public class FrontStoreJFrame extends JFrame {
         JButton orderButton = new JButton("Go To Cart");
         orderButton.addActionListener(e -> {
             new UserCartJFrame(orderRepository, user).setVisible(true);
-            dispose();
+            jFrame.dispose();
         });
         mainPanel.add(orderButton);
 
         // Front Screen Data in a table view
-        JScrollPane pane = getOrderTable(productRepository, orderRepository, user);
+        JScrollPane pane = getOrderTable(user, jFrame);
         mainPanel.add(pane);
 
-        add(mainPanel);
-        setBounds(450, 190, 1014, 597);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        jFrame.add(mainPanel);
+        jFrame.setBounds(450, 190, 1014, 597);
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jFrame.setLocationRelativeTo(null);
+        return jFrame;
     }
 
     /**
      * This method prepares the Order data in a table format by fetching the order data from database.
      */
-    private JScrollPane getOrderTable(ProductRepository productRepository, OrderRepository orderRepository, User user) {
+    private JScrollPane getOrderTable(User user, JFrame thisJFrame) {
         java.util.List<Product> products = (java.util.List<Product>) productRepository.findAll();
 
         java.util.List<java.util.List<String>> decoratedTableRows = new ArrayList<>();
@@ -95,8 +109,7 @@ public class FrontStoreJFrame extends JFrame {
         table.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
 
         //SET CUSTOM EDITOR TO TEAMS COLUMN
-        table.getColumnModel().getColumn(5).setCellEditor(new SalesFrontHandler(new JTextField(), productRepository, orderRepository, user, this));
-
+        table.getColumnModel().getColumn(5).setCellEditor(new SalesFrontHandler(new JTextField(), productRepository, user, thisJFrame));
 
         // To Wrap the text in table cells.
         table.getColumnModel().getColumn(1).setCellRenderer(new WordWrapCellRenderer());

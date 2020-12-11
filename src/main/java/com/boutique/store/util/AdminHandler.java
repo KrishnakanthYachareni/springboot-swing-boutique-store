@@ -6,8 +6,6 @@ import com.boutique.store.repository.ProductRepository;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * It handles the store back end screen sales order items logic to performs CRUD.
@@ -18,24 +16,19 @@ public class AdminHandler extends DefaultCellEditor {
     private Boolean clicked;
     private final ProductRepository productRepository;
     private final User user;
-    private final AdminStoreJFrame thisObj;
+    private final AdminStoreJFrame adminStoreJFrame;
 
-    public AdminHandler(JTextField txt, ProductRepository productRepository, User user, AdminStoreJFrame thisObj) {
+    public AdminHandler(JTextField txt, ProductRepository productRepository, User user, AdminStoreJFrame adminStoreJFrame) {
         super(txt);
         this.productRepository = productRepository;
         this.user = user;
-        this.thisObj = thisObj;
+        this.adminStoreJFrame = adminStoreJFrame;
 
         btn = new JButton();
         btn.setOpaque(true);
 
         //WHEN BUTTON IS CLICKED
-        btn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                fireEditingStopped();
-            }
-        });
+        btn.addActionListener(e -> fireEditingStopped());
     }
 
     @Override
@@ -53,8 +46,8 @@ public class AdminHandler extends DefaultCellEditor {
     @Override
     public Object getCellEditorValue() {
         if (clicked) {
-            new AdminStoreJFrame(productRepository, user).setVisible(true);
-            thisObj.dispose();
+            adminStoreJFrame.adminJFrame().dispose();
+            adminStoreJFrame.adminStoreJFrame(user).setVisible(true);
         }
         clicked = false;
         return lbl;

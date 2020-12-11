@@ -7,6 +7,8 @@ import com.boutique.store.repository.ProductRepository;
 import com.boutique.store.util.AdminHandler;
 import com.boutique.store.util.ButtonRenderer;
 import com.boutique.store.util.WordWrapCellRenderer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,23 +16,34 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class AdminStoreJFrame extends JFrame {
-    private final JPanel mainPanel;
+@Component
+public class AdminStoreJFrame {
 
-    public AdminStoreJFrame(ProductRepository productRepository, User user) {
-        setTitle("Store Backend – Admin");
-        mainPanel = new JPanel(); // main panel
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private AddItemJFrame addItemJFrame;
+
+    @Autowired
+    private FrontStoreJFrame frontStoreJFrame;
+
+    private JFrame jFrame;
+
+    public JFrame adminStoreJFrame(User user) {
+        jFrame = new JFrame("Store Backend – Admin");
+        final JPanel mainPanel = new JPanel(); // main panel
+
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-
         mainPanel.add(new JLabel("Store Backend – Admin Personnel Login (" + user.getUsername() + ")\n"));
         mainPanel.add(new JLabel(" \n"));
         mainPanel.add(new JLabel("Today's Date: " + new Date().toString()));
+        mainPanel.add(new JLabel(" \n"));
+        mainPanel.add(new JLabel(" \n"));
 
-        mainPanel.add(new JLabel(" \n"));
-        mainPanel.add(new JLabel(" \n"));
         JButton addItem = new JButton("Add New");
         addItem.addActionListener(e -> {
-            new AddItemJFrame(productRepository, this, user).setVisible(true);
+            addItemJFrame.addItemJFrame(this, user).setVisible(true);
         });
         mainPanel.add(addItem);
         mainPanel.add(new JLabel(" \n"));
@@ -38,8 +51,8 @@ public class AdminStoreJFrame extends JFrame {
         // Admin Navigation to front store.
         JButton button = new JButton("Store");
         button.addActionListener(e -> {
-            new FrontStoreJFrame(productRepository, null, user).setVisible(true);
-            dispose();
+            frontStoreJFrame.frontStoreJFrame(user).setVisible(true);
+            jFrame.dispose();
         });
 
         if (Role.ADMIN == user.getRole()) {
@@ -52,11 +65,13 @@ public class AdminStoreJFrame extends JFrame {
 
         JScrollPane pane = getOrderTable(productRepository, user);
         mainPanel.add(pane);
-        add(mainPanel);
+        jFrame.add(mainPanel);
 
-        setBounds(450, 190, 1014, 597);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        jFrame.setBounds(450, 190, 1014, 597);
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jFrame.setLocationRelativeTo(null);
+
+        return jFrame;
     }
 
     private JScrollPane getOrderTable(ProductRepository productRepository, User user) {
@@ -95,6 +110,10 @@ public class AdminStoreJFrame extends JFrame {
         table.getColumnModel().getColumn(3).setCellRenderer(new WordWrapCellRenderer());
 
         return new JScrollPane(table);
+    }
+
+    public JFrame adminJFrame() {
+        return this.jFrame;
     }
 }
 

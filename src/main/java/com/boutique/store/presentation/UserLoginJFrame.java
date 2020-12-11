@@ -1,8 +1,6 @@
 package com.boutique.store.presentation;
 
 import com.boutique.store.entities.User;
-import com.boutique.store.repository.OrderRepository;
-import com.boutique.store.repository.ProductRepository;
 import com.boutique.store.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,10 +29,7 @@ public class UserLoginJFrame extends JFrame {
     private UserRepository repository;
 
     @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private OrderRepository orderRepository;
+    private FrontStoreJFrame frontStoreJFrame;
 
     /**
      * Constructor used to initialize the JFrame login screen elements and it performs the on click action operations which are present on the screen.
@@ -100,7 +95,7 @@ public class UserLoginJFrame extends JFrame {
                     JOptionPane.showMessageDialog(null, "Given user is not Exist");
                 }
                 if (password.equals(user.getPassword())) {
-                    new FrontStoreJFrame(productRepository, orderRepository, user).setVisible(true);
+                    frontStoreJFrame.frontStoreJFrame(user).setVisible(true);
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid User or Password");

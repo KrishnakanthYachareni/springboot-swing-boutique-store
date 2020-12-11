@@ -3,6 +3,8 @@ package com.boutique.store.presentation;
 import com.boutique.store.entities.Product;
 import com.boutique.store.entities.User;
 import com.boutique.store.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
@@ -13,22 +15,35 @@ import java.awt.*;
 /**
  * Admin add item pop screen JFrame
  */
-public class AddItemJFrame extends JFrame {
-    private final JTextField textField;
-    private final JTextField textField_1;
-    private final JTextField textField_2;
-    private final JTextField textField_3;
-    private final JTextField textField_4;
+@Component
+public class AddItemJFrame {
+
+    @Autowired
+    private AdminStoreJFrame adminStoreJFrame;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    private JFrame jFrame;
 
     /**
      * Create the Add item pop screen
      */
-    public AddItemJFrame(ProductRepository productRepository, AdminStoreJFrame thisobj, User user) {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 450, 404);
+    public JFrame addItemJFrame(AdminStoreJFrame thisobj, User user) {
+
+        jFrame = new JFrame("Add Product");
+
+        JTextField textField;
+        JTextField textField1;
+        JTextField textField2;
+        JTextField textField3;
+        JTextField textField4;
+
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jFrame.setBounds(100, 100, 450, 404);
         JPanel contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        setContentPane(contentPane);
+        jFrame.setContentPane(contentPane);
 
         JLabel lblAddBooks = new JLabel("Add Item");
         lblAddBooks.setForeground(Color.GRAY);
@@ -42,27 +57,27 @@ public class AddItemJFrame extends JFrame {
         textField = new JTextField();
         textField.setColumns(10);
 
-        textField_1 = new JTextField();
-        textField_1.setColumns(10);
+        textField1 = new JTextField();
+        textField1.setColumns(10);
 
-        textField_2 = new JTextField();
-        textField_2.setColumns(10);
+        textField2 = new JTextField();
+        textField2.setColumns(10);
 
-        textField_3 = new JTextField();
-        textField_3.setColumns(10);
+        textField3 = new JTextField();
+        textField3.setColumns(10);
 
-        textField_4 = new JTextField();
-        textField_4.setColumns(10);
+        textField4 = new JTextField();
+        textField4.setColumns(10);
 
         JButton btnAddBooks = new JButton("Add Item");
 
         // After cliking on Add Item button, it saves the new order data inside database using spring data repository.
         btnAddBooks.addActionListener(e -> {
             String title = textField.getText();
-            String barCode = textField_1.getText();
-            String price = textField_2.getText();
-            String description = textField_3.getText();
-            String squantity = textField_4.getText();
+            String barCode = textField1.getText();
+            String price = textField2.getText();
+            String description = textField3.getText();
+            String squantity = textField4.getText();
 
             Product item = new Product();
             item.setTitle(title);
@@ -75,16 +90,16 @@ public class AddItemJFrame extends JFrame {
             item.setDescription(description);
 
             productRepository.save(item);
-            thisobj.dispose();
-            new AdminStoreJFrame(productRepository, user).setVisible(true);
-            dispose();
+            thisobj.adminJFrame().dispose();
+            adminStoreJFrame.adminStoreJFrame(user).setVisible(true);
+            jFrame.dispose();
         });
 
         JButton btnBack = new JButton("Cancel");
         btnBack.addActionListener(e -> {
-            thisobj.dispose();
-            new AdminStoreJFrame(productRepository, user).setVisible(true);
-            dispose();
+            thisobj.adminJFrame().dispose();
+            adminStoreJFrame.adminStoreJFrame(user).setVisible(true);
+            jFrame.dispose();
         });
         GroupLayout gl_contentPane = new GroupLayout(contentPane);
         gl_contentPane.setHorizontalGroup(
@@ -104,10 +119,10 @@ public class AddItemJFrame extends JFrame {
                                                         .addComponent(lblQuantity, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE))
                                                 .addGap(47)
                                                 .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-                                                        .addComponent(textField_4, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(textField_3, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(textField_2, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(textField4, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(textField3, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(textField2, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(textField1, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(textField, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE))))
                                 .addContainerGap(125, Short.MAX_VALUE))
                         .addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
@@ -130,19 +145,19 @@ public class AddItemJFrame extends JFrame {
                                 .addGap(18)
                                 .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
                                         .addComponent(lblbarCodeNumber)
-                                        .addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(textField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addGap(18)
                                 .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
                                         .addComponent(lblPrice)
-                                        .addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(textField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addGap(18)
                                 .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
                                         .addComponent(lblDescription)
-                                        .addComponent(textField_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(textField3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addGap(18)
                                 .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
                                         .addComponent(lblQuantity)
-                                        .addComponent(textField_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(textField4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addGap(30)
                                 .addComponent(btnAddBooks, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(ComponentPlacement.RELATED)
@@ -150,6 +165,7 @@ public class AddItemJFrame extends JFrame {
                                 .addContainerGap(53, Short.MAX_VALUE))
         );
         contentPane.setLayout(gl_contentPane);
+        return jFrame;
     }
 
 }
