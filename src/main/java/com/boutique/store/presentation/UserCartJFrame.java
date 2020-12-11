@@ -8,7 +8,7 @@ import com.boutique.store.repository.OrderHistoryRepository;
 import com.boutique.store.repository.OrderRepository;
 import com.boutique.store.util.ButtonRenderer;
 import com.boutique.store.service.OrderHistoryService;
-import com.boutique.store.service.OrderUtil;
+import com.boutique.store.service.OrderService;
 import com.boutique.store.util.WordWrapCellRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,7 +35,7 @@ public class UserCartJFrame {
     private FrontStoreJFrame frontStoreJFrame;
 
     @Autowired
-    private OrderUtil orderUtil;
+    private OrderService orderService;
 
     private JFrame jFrame;
 
@@ -75,7 +75,7 @@ public class UserCartJFrame {
                 orderHistory.setUserId(user.getId());
                 orderHistory.setStatus("Delivered");
                 orderHistoryRepository.save(orderHistory);
-                orderUtil.removeOrder(user, false);
+                orderService.removeOrder(user, false);
             }
             JOptionPane.showMessageDialog(jFrame, "Purchased");
             this.userCartJFrame().dispose();
@@ -86,7 +86,7 @@ public class UserCartJFrame {
         // Remove the order completely.
         JButton removeButton = new JButton("Remove");
         removeButton.addActionListener(e -> {
-            orderUtil.removeOrder(user, true);
+            orderService.removeOrder(user, true);
             this.userCartJFrame().dispose();
             this.userCartJFrame(user).setVisible(true);
         });
@@ -139,18 +139,18 @@ public class UserCartJFrame {
         List<Order> orders = orderRepository.findAllByUserId(user.getId());
 
         List<List<String>> orderItems = new ArrayList<>();
-        for (Product item : OrderUtil.extractProduct(orders)) {
+        for (Product item : OrderService.extractProduct(orders)) {
             List<String> list = new ArrayList<>();
             list.add(String.valueOf(item.getId()));
             list.add("Item: " + item.getTitle() + " \nBarcode number: " + item.getBarcodeNumber());
-            list.add("Price: $" + item.getPrice() + " \nTax: $" + item.getTax() + "\nTotal: $" + OrderUtil.totalAmount(item));
+            list.add("Price: $" + item.getPrice() + " \nTax: $" + item.getTax() + "\nTotal: $" + OrderService.totalAmount(item));
             orderItems.add(list);
         }
 
         List<String> grandTotalRow = new ArrayList<>();
         grandTotalRow.add("");
         grandTotalRow.add("");
-        grandTotalRow.add("Grand Total: $" + OrderUtil.grandTotalAmount(orders));
+        grandTotalRow.add("Grand Total: $" + OrderService.grandTotalAmount(orders));
         orderItems.add(grandTotalRow);
 
         Object[][] data = orderItems.stream()

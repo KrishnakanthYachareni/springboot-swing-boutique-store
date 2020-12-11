@@ -39,7 +39,7 @@ public class AdminService extends DefaultCellEditor {
 
         long id = Long.parseLong(String.valueOf(table.getModel().getValueAt(0, 0)));
 
-        OrderUtil.deleteItem(id, productRepository);
+        OrderService.deleteItem(id, productRepository);
         return btn;
     }
 

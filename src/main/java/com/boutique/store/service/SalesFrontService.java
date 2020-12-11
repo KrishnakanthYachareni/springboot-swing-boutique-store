@@ -43,7 +43,7 @@ public class SalesFrontService extends DefaultCellEditor {
         // Handles the order item addition to cart.
         long id = Long.parseLong(String.valueOf(table.getModel().getValueAt(row, 0)));
 
-        OrderUtil.addItemToCart(id, user, productRepository, orderRepository);
+        OrderService.addItemToCart(id, user, productRepository, orderRepository);
         return btn;
     }
 
