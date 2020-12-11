@@ -4,14 +4,15 @@ import com.boutique.store.entities.Product;
 import com.boutique.store.entities.User;
 import com.boutique.store.repository.OrderRepository;
 import com.boutique.store.repository.ProductRepository;
-import com.boutique.store.util.ButtonRenderer;
 import com.boutique.store.service.SalesFrontService;
+import com.boutique.store.util.ButtonRenderer;
 import com.boutique.store.util.UserUtil;
 import com.boutique.store.util.WordWrapCellRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,7 +63,20 @@ public class FrontStoreJFrame {
             mainPanel.add(adminButton);
         }
         mainPanel.add(new JLabel(" \n"));
+        mainPanel.add(new JLabel(" \n"));
         mainPanel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+
+        // Search Items handling.
+        JButton b = new JButton("Search");
+        JTextField jTextField = new JTextField("Type your item to be searched..!", 2);
+        Border border = BorderFactory.createLineBorder(Color.CYAN, 2);
+        jTextField.setBorder(border);
+        mainPanel.add(jTextField);
+        mainPanel.add(b);
+
+        mainPanel.add(new JLabel(" \n"));
+        mainPanel.add(new JLabel(" \n"));
+        mainPanel.add(new JLabel(" \n"));
 
         //Add Order screen button.
         JButton orderButton = new JButton("Go To Cart");

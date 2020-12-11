@@ -86,6 +86,7 @@ public class AdminStoreJFrame {
             list.add("Description: " + item.getDescription());
             list.add("Reason unavailable: " + item.getStatus());
             list.add("Delete");
+            list.add("Edit");
             decoratedTableRows.add(list);
         }
 
@@ -94,16 +95,16 @@ public class AdminStoreJFrame {
                 .toArray(Object[][]::new);
 
         //COLUMN HEADERS
-        String[] columnHeaders = new String[]{"Id", "Title", "Order", "Description", "Status", ""};
+        String[] columnHeaders = new String[]{"Id", "Title", "Order", "Description", "Status", "", ""};
         //CREATE OUR TABLE AND SET HEADER
         JTable table = new JTable(data, columnHeaders);
 
         //SET CUSTOM RENDERER TO TEAMS COLUMN
         table.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
+        table.getColumnModel().getColumn(6).setCellRenderer(new ButtonRenderer());
 
         //SET CUSTOM EDITOR TO TEAMS COLUMN
         table.getColumnModel().getColumn(5).setCellEditor(new AdminService(new JTextField(), productRepository, user, this));
-
 
         table.getColumnModel().getColumn(1).setCellRenderer(new WordWrapCellRenderer());
         table.getColumnModel().getColumn(2).setCellRenderer(new WordWrapCellRenderer());
