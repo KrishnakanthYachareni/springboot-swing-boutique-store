@@ -18,6 +18,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Store Front screen.
+ * <p>
+ * Note: On this Store Front screen Add button should be double clicked in order to work, bcz it handled by Button wrapper in side JTable
+ */
 @Component
 public class FrontStoreJFrame {
 

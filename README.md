@@ -9,6 +9,9 @@ tax amount of 13% is added to the total. The pay now (doesn’t have to really w
 window saying “Purchased” is sufficient). Finally, the order history is stored in the system to be
 viewed at any time with a timestamp of purchase by sales or administrator.
 
+### Note:
+On Store Front Screen, Back End Screen Add, Edit, Delete buttons should be double clicked in order to work. bcz it handled by Button wrapper in side JTable. 
+
 ## How to Run it
 This is a Spring Boot standalone application, so your typical `spring-boot:run` maven goal will do the trick. 
 Since it's using an in-memory database, there's no additional setup required for that.

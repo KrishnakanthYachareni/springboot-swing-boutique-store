@@ -16,6 +16,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
+/**
+ * Store Back End screen.
+ * <p>
+ * Note: On this Back end screen Edit, Delete buttons should be double clicked in order to work, bcz it handled by Button wrapper in side JTable
+ */
 @Component
 public class AdminStoreJFrame {
 
